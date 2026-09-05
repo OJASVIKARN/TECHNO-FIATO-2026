@@ -784,9 +784,627 @@
   }
 </script>
 
-  <!-- EzyConn Chat Widget -->
-<script src="https://api.ezyconn.com/api/v1/widget/script.js"
-        data-token="ezc_iwIc83Q3lYsP4-5CCDF4oVGmqltIIfmJIyUU63P4TPU"></script>
+  <!-- ================= TECHNO FIATO CUSTOM SMART CHATBOT ================= -->
+<div id="tf-chat-root">
+  <!-- Neon Chat Launcher Button -->
+  <button id="tf-launcher" aria-label="Open Techno Fiato Assistant">
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#000000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    <span class="tf-online-indicator"></span>
+  </button>
+
+  <!-- Chat Window -->
+  <div id="tf-window" class="tf-hidden">
+    <!-- Header -->
+    <div class="tf-header">
+      <div class="tf-header-info">
+        <div class="tf-avatar">TF</div>
+        <div>
+          <h4>TECHNO FIATO BOT</h4>
+          <p><span class="tf-dot"></span> Instant Answers • 24/7</p>
+        </div>
+      </div>
+      <button id="tf-close" aria-label="Close Chat">✕</button>
+    </div>
+
+    <!-- Quick Action Pills -->
+    <div class="tf-quick-actions">
+      <button onclick="tfSendAction('About Techno Fiato')">⚡ About Event</button>
+      <button onclick="tfSendAction('How to register?')">📝 Register</button>
+      <button onclick="tfSendAction('Schedule & Venue')">📅 Schedule</button>
+      <button onclick="tfSendAction('Techélon Events')">💻 Techélon</button>
+      <button onclick="tfSendAction('Machina Fiato Events')">🤖 Machina Fiato</button>
+      <button onclick="tfSendAction('Official Rules')">📜 Rules</button>
+      <button onclick="tfSendAction('Contact Information')">📞 Contact</button>
+    </div>
+
+    <!-- Chat Messages Feed -->
+    <div id="tf-messages">
+      <div class="tf-msg tf-bot">
+        Hey creator! 👋 Welcome to <strong>Techno Fiato 2026</strong>.<br><br>
+        Ask me anything about events, rules, robot specs, software, coordinators, or registration!
+      </div>
+    </div>
+
+    <!-- Input Form -->
+    <form id="tf-form" onsubmit="tfHandleSubmit(event)">
+      <input type="text" id="tf-input" placeholder="Ask about events, rules, registration..." autocomplete="off" />
+      <button type="submit" id="tf-send" aria-label="Send">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+  #tf-chat-root {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999999;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  #tf-launcher {
+    background: #3AC816;
+    border: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 24px rgba(58, 200, 22, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+    position: relative;
+    padding: 0;
+  }
+  #tf-launcher:hover {
+    transform: scale(1.08);
+    box-shadow: 0 0 32px rgba(58, 200, 22, 0.85);
+  }
+  .tf-online-indicator {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 14px;
+    height: 14px;
+    background: #000000;
+    border-radius: 50%;
+    border: 3px solid #3AC816;
+    box-shadow: 0 0 8px #3AC816;
+  }
+  #tf-window {
+    position: absolute;
+    bottom: 74px;
+    right: 0;
+    width: 388px;
+    height: 540px;
+    max-height: 80vh;
+    background: rgba(10, 14, 10, 0.95);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(58, 200, 22, 0.28);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9), 0 0 25px rgba(58,200,22,0.14);
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #tf-window.tf-hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(18px) scale(0.96);
+  }
+  .tf-header {
+    background: #040604;
+    padding: 13px 16px;
+    border-bottom: 1px solid rgba(58, 200, 22, 0.16);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .tf-header-info { display: flex; align-items: center; gap: 12px; }
+  .tf-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid #3AC816;
+    background: #050805;
+    color: #3AC816;
+    font-weight: 900;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tf-header h4 {
+    margin: 0;
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.8px;
+  }
+  .tf-header p {
+    margin: 3px 0 0;
+    font-size: 11px;
+    color: #8c9e8a;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .tf-dot {
+    width: 6.5px;
+    height: 6.5px;
+    background: #3AC816;
+    border-radius: 50%;
+    box-shadow: 0 0 6px #3AC816;
+    display: inline-block;
+  }
+  #tf-close {
+    background: transparent;
+    border: none;
+    color: #6d806c;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px;
+    transition: color 0.15s;
+  }
+  #tf-close:hover { color: #3AC816; }
+  .tf-quick-actions {
+    background: rgba(14, 20, 14, 0.7);
+    padding: 8px 12px;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    border-bottom: 1px solid rgba(58, 200, 22, 0.12);
+    scrollbar-width: none;
+  }
+  .tf-quick-actions::-webkit-scrollbar { display: none; }
+  .tf-quick-actions button {
+    background: #111a10;
+    border: 1px solid #1f3d19;
+    color: #3AC816;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .tf-quick-actions button:hover {
+    background: #3AC816;
+    color: #000000;
+    box-shadow: 0 0 12px rgba(58,200,22,0.45);
+  }
+  #tf-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+  #tf-messages::-webkit-scrollbar { width: 4px; }
+  #tf-messages::-webkit-scrollbar-thumb { background: #1c3616; border-radius: 4px; }
+  .tf-msg {
+    max-width: 86%;
+    padding: 11px 15px;
+    font-size: 13px;
+    line-height: 1.48;
+    border-radius: 12px;
+    word-break: break-word;
+  }
+  .tf-bot {
+    background: #121811;
+    color: #e0eee0;
+    align-self: flex-start;
+    border: 1px solid #1e3819;
+    border-top-left-radius: 2px;
+  }
+  .tf-bot a {
+    color: #3AC816;
+    font-weight: 700;
+    text-decoration: underline;
+  }
+  .tf-user {
+    background: #3AC816;
+    color: #000000;
+    align-self: flex-end;
+    font-weight: 600;
+    border-top-right-radius: 2px;
+    box-shadow: 0 2px 10px rgba(58,200,22,0.3);
+  }
+  .tf-contact-badge {
+    display: inline-block;
+    background: #172416;
+    border: 1px solid #2e5923;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-top: 8px;
+    font-size: 11.5px;
+    color: #c4ecc0;
+  }
+  .tf-contact-badge a {
+    color: #3AC816 !important;
+    text-decoration: none !important;
+  }
+  #tf-form {
+    padding: 10px 14px;
+    background: #030503;
+    border-top: 1px solid rgba(58, 200, 22, 0.16);
+    display: flex;
+    gap: 8px;
+  }
+  #tf-input {
+    flex: 1;
+    background: #0e130e;
+    border: 1px solid #1c3518;
+    color: #ffffff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #tf-input:focus { border-color: #3AC816; }
+  #tf-send {
+    background: #3AC816;
+    color: #000000;
+    border: none;
+    padding: 0 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  #tf-send:hover { background: #45ea1b; }
+  @media(max-width: 480px) {
+    #tf-window { width: calc(100vw - 32px); right: -10px; bottom: 74px; }
+  }
+</style>
+
+<script>
+  const tfLauncher = document.getElementById('tf-launcher');
+  const tfWindow = document.getElementById('tf-window');
+  const tfClose = document.getElementById('tf-close');
+  const tfMessages = document.getElementById('tf-messages');
+  const tfInput = document.getElementById('tf-input');
+
+  tfLauncher.onclick = () => tfWindow.classList.toggle('tf-hidden');
+  tfClose.onclick = () => tfWindow.classList.add('tf-hidden');
+
+  function tfAppend(text, sender) {
+    const el = document.createElement('div');
+    el.className = `tf-msg tf-${sender}`;
+    el.innerHTML = text;
+    tfMessages.appendChild(el);
+    tfMessages.scrollTop = tfMessages.scrollHeight;
+  }
+
+  function tfSendAction(text) {
+    tfAppend(text, 'user');
+    setTimeout(() => tfBotEngine(text), 240);
+  }
+
+  function tfHandleSubmit(e) {
+    e.preventDefault();
+    const val = tfInput.value.trim();
+    if(!val) return;
+    tfAppend(val, 'user');
+    tfInput.value = '';
+    setTimeout(() => tfBotEngine(val), 240);
+  }
+
+  function tfBotEngine(raw) {
+    const q = raw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+    let reply = "";
+
+    // 1. Abuse Filter
+    const cussRegex = /\b(bc|bhenchod|behenchod|madarchod|bsdk|mc|bkl|pagal|bewakoof|bewakuf|chutiya|gandu|lode|laude|fuck|bitch|asshole)\b/;
+    if (cussRegex.test(q)) {
+      reply = `⚠️ <strong>Warning:</strong> Inappropriate language detected. Please maintain decorum. You will be permanently blocked if any more attempts are made.`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 2. JPSMUN / MUN Banter
+    if (q.includes("jpsmun") || q.includes("mun")) {
+      reply = `We all already know which is a better event. Ig that's why you are here. 😉⚡`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 3. Okay / Theek Hai
+    if (/^(o+k+a*y*|th+e+k+|th+e+e+k+|thik|acha|achha|sahi hai|got it|cool|done|noted|alright)\b/i.test(q)) {
+      const okReplies = [
+        "Awesome! Let me know if you want to know about any specific event or rules.",
+        "Perfect! Need info on any other competition or timings?",
+        "Sounds good! Feel free to ask anything else about Techno Fiato 2026.",
+        "Great! Let's get your team competition-ready. What's next?"
+      ];
+      reply = okReplies[Math.floor(Math.random() * okReplies.length)];
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 4. Contact Information Check
+    if (q.includes("contact") || q.includes("phone") || q.includes("number") || q.includes("director") || q.includes("pranav") || q.includes("social") || q.includes("instagram") || q.includes("email") || q.includes("call")) {
+      reply = `📞 <strong>Official Contact Info:</strong><br>
+      • <strong>Event Director:</strong> Pranav Shah (<a href="tel:+919910314971">+91 99103 14971</a>)<br>
+      • <strong>Email:</strong> <a href="mailto:coreteam@jpstechnofiato.tech">coreteam@jpstechnofiato.tech</a><br>
+      • <strong>Instagram:</strong> <a href="https://instagram.com/jps_technofiato" target="_blank">@jps_technofiato</a>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 5. Greetings
+    if (/^h+i+/i.test(q) || /^h+e+l+o+/i.test(q) || /^h+e+y+/i.test(q) || q.includes("hola") || q.includes("meow") || q.includes("sup") || q.includes("namaste")) {
+      if (q.includes("meow")) {
+        reply = `Meow meow! 🐾 Even cats know Techno Fiato is where the real tech claws come out. What event are you hunting today?`;
+      } else {
+        const greetings = [
+          "Hey there! Ready to dominate at Techno Fiato 2026? What event are you targeting?",
+          "Hello innovator! Looking for event guidelines, schedules, or direct registration links?",
+          "Greetings! Welcome to the nexus of Machina Fiato & Techélon. How can I assist your team today?",
+          "Hey! System running at 100% capacity. Ready to give you all festival intel!"
+        ];
+        reply = greetings[Math.floor(Math.random() * greetings.length)];
+      }
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("how are you") || q.includes("kaise ho")) {
+      reply = "All circuits operational and running at peak performance! ⚡ Ready to help you gear up for Techno Fiato 2026. What would you like to know?";
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("who are you") || q.includes("kya ho tum") || q.includes("what can you do")) {
+      reply = "I am the official <strong>Techno Fiato 2026 Bot</strong>, programmed to provide instant and accurate intel on all 14 tech and robotics competitions hosted by Jagran Public School, Lucknow!";
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("thank") || q.includes("shukriya")) {
+      reply = "Happy to help! May your code compile on the first try and your robots never stall. See you on 31st October! 🚀";
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 6. About Techno Fiato
+    if (q.includes("what is techno fiato") || q.includes("about techno fiato") || q.includes("tell me about techno fiato") || q.includes("technofiato kya hai") || q.includes("what is this event") || q.includes("about event")) {
+      reply = `⚡ <strong>Techno Fiato 2026</strong> is the annual flagship technology and robotics festival hosted by <strong>Jagran Public School, Lucknow</strong>.<br><br>
+      • <strong>The Vision:</strong> "Techno" combines with "Fiato" (meaning <em>breath</em>) — symbolizing the heartbeat of students' ideas where gears meet logic and circuits spark imagination!<br>
+      • <strong>Motto:</strong> <em>"Built to Compete, Programmed to Win"</em><br>
+      • <strong>Two Arenas:</strong> 14 events across <strong>Techélon</strong> (software, design, 3D, coding, gaming) and <strong>Machina Fiato</strong> (combat, racing, precision robotics, hovercrafts).<br>
+      • <strong>Event Date:</strong> Saturday, 31st October 2026.`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 7. Registration Details
+    if (q.includes("register") || q.includes("apply") || q.includes("link") || q.includes("form") || q.includes("fee") || q.includes("cost")) {
+      reply = `⚡ <strong>Registration Portal:</strong><br>
+      • <strong>Direct Link:</strong> <a href="https://tally.so/r/b51QWZ" target="_blank">Click Here to Register</a><br>
+      • <strong>Timeline:</strong> Opens 5th September 2026 | Closes 21st October 2026<br>
+      • <strong>Eligibility:</strong> Classes 6 to 12 across participating schools<br>
+      • <strong>Rule:</strong> A student can register for a maximum of 2 events.<br>
+      • <strong>Verification:</strong> Bring your School ID card & registration confirmation on event day!`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 8. Schedule & Venue
+    if (q.includes("date") || q.includes("when") || q.includes("timing") || q.includes("schedule") || q.includes("reporting") || q.includes("venue") || q.includes("where")) {
+      reply = `📅 <strong>Schedule & Venue:</strong><br>
+      • <strong>Event Date:</strong> Saturday, 31st October 2026<br>
+      • <strong>Reporting Time:</strong> 07:45 AM sharp<br>
+      • <strong>Inauguration:</strong> 08:00 AM (Activity Hall, 1st Floor)<br>
+      • <strong>Venue:</strong> Jagran Public School, Viraj Khand-2, Gomti Nagar, Lucknow<br>
+      • <strong>Prize Ceremony:</strong> Concluding ceremony in the afternoon (staying till the end is required).`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 9. Categories Overview
+    if (q.includes("techelon") || q.includes("tech event") || q.includes("software list")) {
+      reply = `💻 <strong>Techélon Competitions (Tech & Code):</strong><br>
+      • <strong>Editra:</strong> On-the-spot video editing (Premiere/Filmora/CapCut)<br>
+      • <strong>Pixelis:</strong> Photoshop visual composition challenge<br>
+      • <strong>Modelus Virtuo:</strong> 3D recreation in Blender 4.3<br>
+      • <strong>Bytecoder:</strong> Competitive coding in Python 3.x / Java<br>
+      • <strong>Bytegenesis:</strong> Scratch 3.0 animation (Classes 6-8)<br>
+      • <strong>Morphotek:</strong> UI/UX rapid prototyping in Figma<br>
+      • <strong>Arcbyte:</strong> Gaming tournament (Mortal Kombat & EA FC)<br>
+      • <strong>Technova:</strong> Functional hardware/software project presentation`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("machina") || q.includes("robotics list") || q.includes("all robots")) {
+      reply = `🤖 <strong>Machina Fiato (Robotics Arena):</strong><br>
+      • <strong>Robo Rash:</strong> High-speed obstacle time-trial track<br>
+      • <strong>Maneuver:</strong> Precision navigation & payload placement<br>
+      • <strong>Hover Surge:</strong> PvP Hovercraft knockout clash<br>
+      • <strong>GOB (Game of Bots):</strong> 5-minute combat durability battle<br>
+      • <strong>Ballista:</strong> Fast-paced robotic football match<br>
+      • <strong>Robo Rumble:</strong> Strategic balloon-popping clash`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 10. Techélon Specific Events with Coordinators
+    if (q.includes("editra")) {
+      reply = `🎬 <strong>Editra (Video Editing):</strong><br>
+      • <strong>Format:</strong> Individual | Duration: 1 Hour<br>
+      • <strong>Timings:</strong> Class 9-12 (08:45 AM) | Class 6-8 (10:00 AM)<br>
+      • <strong>Venue:</strong> Computer Lab 1 (1st Floor)<br>
+      • <strong>Software:</strong> Adobe Premiere Pro, Wondershare Filmora, CapCut, Photoshop<br>
+      • <strong>Task:</strong> Create a 30-60 sec video on an on-the-spot theme.<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Ameya Singh (<a href="tel:+917905954549">+91 79059 54549</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("pixelis") || q.includes("photoshop")) {
+      reply = `🎨 <strong>Pixelis (Digital Art & Design):</strong><br>
+      • <strong>Format:</strong> Individual | Duration: 1 Hour<br>
+      • <strong>Timings:</strong> Class 9-12 (08:45 AM) | Class 6-8 (11:15 AM)<br>
+      • <strong>Venue:</strong> Computer Lab 1 / Lab 3<br>
+      • <strong>Software:</strong> Adobe Photoshop<br>
+      • <strong>Task:</strong> Creative visual composition on a topic revealed on the spot.<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Ameya Singh (<a href="tel:+917905954549">+91 79059 54549</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("modelus") || q.includes("blender") || q.includes("3d")) {
+      reply = `🧊 <strong>Modelus Virtuo (3D Modeling):</strong><br>
+      • <strong>Format:</strong> Individual (Class 9-12) | Duration: 1 Hour<br>
+      • <strong>Timing:</strong> 10:00 - 11:00 AM | Computer Lab 3 (2nd Floor)<br>
+      • <strong>Software:</strong> Blender v4.3<br>
+      • <strong>Rules:</strong> Recreate a reference image from scratch in 3D. No external assets or internet allowed!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Anuvi Srivastava (<a href="tel:+919532343029">+91 95323 43029</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("bytecoder") || q.includes("coding") || q.includes("programming")) {
+      reply = `👨‍💻 <strong>Bytecoder (Competitive Programming):</strong><br>
+      • <strong>Format:</strong> Individual (Class 9-12) | Duration: 1 Hour<br>
+      • <strong>Timing:</strong> 11:15 AM - 12:15 PM | Computer Lab 3 (2nd Floor)<br>
+      • <strong>Languages:</strong> Python 3.x and BlueJ (Java)<br>
+      • <strong>Task:</strong> Solve 3 complex algorithmic problems. Evaluated on speed, logic flow, and optimization. No internet.<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Anuvi Srivastava (<a href="tel:+919532343029">+91 95323 43029</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("bytegenesis") || q.includes("scratch")) {
+      reply = `🐱 <strong>Bytegenesis (Scratch Animation):</strong><br>
+      • <strong>Format:</strong> Individual (Class 6-8) | Duration: 1 Hour<br>
+      • <strong>Timing:</strong> 12:30 - 01:30 PM | Computer Lab 2 (1st Floor)<br>
+      • <strong>Software:</strong> Scratch v3.0<br>
+      • <strong>Note:</strong> Topics are revealed 1 week prior to the event! Focus on storytelling, dialogue, and block logic.<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Anuvi Srivastava (<a href="tel:+919532343029">+91 95323 43029</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("morphotek") || q.includes("figma") || q.includes("ui") || q.includes("ux")) {
+      reply = `📱 <strong>Morphotek (UI/UX Design):</strong><br>
+      • <strong>Format:</strong> Individual (Class 9-12) | Duration: 1 Hour<br>
+      • <strong>Timing:</strong> 12:30 - 01:30 PM | Computer Lab 1 (1st Floor)<br>
+      • <strong>Software:</strong> Figma (Internet access provided)<br>
+      • <strong>Task:</strong> Conceptualize and design a functional user interface based on an on-the-spot problem statement.<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Anuvi Srivastava (<a href="tel:+919532343029">+91 95323 43029</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("arcbyte") || q.includes("game") || q.includes("gaming") || q.includes("mortal") || q.includes("ea fc") || q.includes("fifa")) {
+      reply = `🎮 <strong>Arcbyte (Gaming Arena):</strong><br>
+      • <strong>Arcbyte 1.0 (Mortal Kombat):</strong> 09:00 AM (2 Hours) | Knockout format<br>
+      • <strong>Arcbyte 2.0 (EA FC):</strong> 11:15 AM (3 Hours) | Knockout, 4-min halves (Final: 6-min)<br>
+      • <strong>Venue:</strong> Computer Lab 2 (1st Floor) | Controllers provided!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Ameya Singh (<a href="tel:+917905954549">+91 79059 54549</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("technova") || q.includes("innovation") || q.includes("prototype") || q.includes("project")) {
+      reply = `💡 <strong>Technova (Innovation Showcase):</strong><br>
+      • <strong>Format:</strong> Team of 3 (Class 9-12) | Timing: 09:15 AM | Activity Hall<br>
+      • <strong>Official Themes:</strong><br>
+        1. Protection against Natural Calamities<br>
+        2. Sustainable Solutions for Renewable Energy Generation<br>
+        3. Modern Strategies for Effective Waste Management<br>
+      • <strong>Rules:</strong> Must have a working software or hardware prototype + documentation. Commercial plug-and-play kits are prohibited!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Ameya Singh (<a href="tel:+917905954549">+91 79059 54549</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 11. Machina Fiato Specific Events with Coordinators
+    if (q.includes("robo rash") || q.includes("obstacle")) {
+      reply = `🏎 <strong>Robo Rash (Obstacle Race):</strong><br>
+      • <strong>Team:</strong> 2 Participants + 1 Bot | Timing: 09:00 AM | Pre-Primary Ground<br>
+      • <strong>Bot Specs:</strong> Max dimensions 25x30x30 cm | Battery-powered only (wired/wireless)<br>
+      • <strong>Penalties:</strong> Out of bounds (+3s), Touching cones (+3s), Ramp flip (+6s)<br>
+      • <strong>Hurdle Skips:</strong> 1st skip (+30s), 2nd skip (+45s). Shortest time wins!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Utkarsh Mishra (<a href="tel:+919919474773">+91 99194 74773</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("maneuver")) {
+      reply = `🎯 <strong>Maneuver (Precision Robotics):</strong><br>
+      • <strong>Team:</strong> 2 Participants + 1 Bot | Timing: 10:00 AM | Basketball Court<br>
+      • <strong>Specs:</strong> Max 30x30x50 cm | Max voltage: 14.8V | Time limit: 6 mins<br>
+      • <strong>Scoring:</strong> Object placement (10 pts/each for 3 boxes & 3 balls), Checkpoints (20 pts), Finish early bonus (+5 pts/10s saved). Hand touch adds 5 seconds penalty.<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Utkarsh Mishra (<a href="tel:+919919474773">+91 99194 74773</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("hover") || q.includes("hovercraft")) {
+      reply = `🛸 <strong>Hover Surge (Hovercraft Clash):</strong><br>
+      • <strong>Timing:</strong> 10:00 AM | Indoor Games Room / Assembly Stage<br>
+      • <strong>Specs:</strong> Max 50x30x30 cm | Wireless only | Must rise at least 1 cm above platform<br>
+      • <strong>Rules:</strong> Best of 3 PvP matches. One 2-minute technical timeout per clash. Push opponent off the platform to win!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Utkarsh Mishra (<a href="tel:+919919474773">+91 99194 74773</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("gob") || q.includes("game of bots") || q.includes("combat")) {
+      reply = `⚔ <strong>Game of Bots (GOB Combat):</strong><br>
+      • <strong>Timing:</strong> 11:00 AM | Assembly Ground<br>
+      • <strong>Specs:</strong> Weight &lt; 5 kg | Max dimensions 50x50x50 cm | Power sources provided<br>
+      • <strong>Match:</strong> 5-minute combat rounds. Leaving the arena leads to disqualification. Winner decided by survival or hit points!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Piyush Mishra (<a href="tel:+919118203997">+91 91182 03997</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("ballista") || q.includes("football") || q.includes("soccer")) {
+      reply = `⚽ <strong>Ballista (Robotic Football):</strong><br>
+      • <strong>Timing:</strong> 11:30 AM | Library (1st Floor) / Basketball Court<br>
+      • <strong>Specs:</strong> Max 30x30x30 cm | Battery-powered | Wired (3-4m) or Wireless<br>
+      • <strong>Rules:</strong> Two 3-minute halves with 2-minute break. Intentional ramming gives free hit penalty to opponent. Most goals wins!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Piyush Mishra (<a href="tel:+919118203997">+91 91182 03997</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+    if (q.includes("rumble") || q.includes("balloon")) {
+      reply = `🎈 <strong>Robo Rumble (Balloon Battle):</strong><br>
+      • <strong>Timing:</strong> 12:00 PM | Basement / Basketball Court<br>
+      • <strong>Specs:</strong> Max 25x30x30 cm | Power ports provided | Wired or Wireless<br>
+      • <strong>Weapons:</strong> Nails/pointed tips allowed; sharp blades or lethal weapons strictly prohibited.<br>
+      • <strong>Objective:</strong> Protect your balloon while popping the opponent's bot balloon!<br>
+      <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Piyush Mishra (<a href="tel:+919118203997">+91 91182 03997</a>)</div>`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 12. General Regulations & Delegation
+    if (q.includes("rule") || q.includes("guideline") || q.includes("kit") || q.includes("rc car") || q.includes("parent") || q.includes("teacher") || q.includes("audience")) {
+      reply = `📜 <strong>Festival Regulations & Delegation Rules:</strong><br>
+      • <strong>Max Events:</strong> 1 student can participate in a maximum of 2 events.<br>
+      • <strong>School Escort:</strong> Participating schools may be accompanied by ONLY 2 teachers.<br>
+      • <strong>Audience:</strong> Extra students or outside audience are strictly NOT permitted on premises.<br>
+      • <strong>No Kits:</strong> Commercially pre-assembled RC cars or ready-made kits are prohibited.<br>
+      • <strong>Decisions:</strong> Judges' decisions are final and binding.`;
+      tfAppend(reply, 'bot');
+      return;
+    }
+
+    // 13. Fallback
+    reply = `I don't have this specific information in my database right now! 🤔<br><br>
+    For queries or specific permissions, reach out directly to:<br>
+    📞 <strong>Event Director:</strong> Pranav Shah (<a href="tel:+919910314971">+91 99103 14971</a>)<br>
+    📧 <strong>Email:</strong> <a href="mailto:coreteam@jpstechnofiato.tech">coreteam@jpstechnofiato.tech</a><br>
+    📸 <strong>Instagram:</strong> @jps_technofiato`;
+    tfAppend(reply, 'bot');
+  }
+</script>
+<!-- ================= END CHATBOT ================= -->
 
 </body>
 </html>
