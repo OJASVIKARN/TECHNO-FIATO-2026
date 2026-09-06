@@ -164,8 +164,12 @@
   /* ---------- CONTACT / TEAM ---------- */
   .contact{padding:120px 0 60px; position:relative; z-index:1; background:var(--bg);}
   .contact-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px;}
-  .info-row{display:grid; grid-template-columns:105px minmax(0,1fr); column-gap:28px; align-items:start; padding:18px 0; border-bottom:1px solid var(--line);}
-  .info-row .k{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; color:var(--text-faint); text-transform:uppercase; padding-top:3px;}
+  .info-box{display:flex; flex-direction:column; gap:2px; background:var(--line); border:1px solid var(--line);}
+  .info-row{background:var(--bg2); display:block; padding:17px 22px 18px; transition:transform .18s, background .18s;}
+  .info-row .k{display:block; margin-bottom:7px;}
+  .info-row .v{display:block;}
+  .info-row:hover{transform:translateX(6px); background:#182018;}
+  .info-row .k{font-family:var(--f-mono); font-size:.68rem; letter-spacing:.1em; color:var(--acid); text-transform:uppercase; padding-top:3px;}
   .info-row .v{font-family:var(--f-mono); font-size:.85rem; color:var(--text); min-width:0; line-height:1.55;}
   .info-row .v a{overflow-wrap:anywhere;}
   .info-row .v a:hover{color:var(--acid);}
@@ -179,7 +183,7 @@
   @media (max-width:900px){ .contact-grid{grid-template-columns:1fr;} }
   @media (max-width:640px){
     .contact{padding-top:96px;}
-    .info-row{display:block; padding:17px 0 18px;}
+    .info-row{padding:17px 0 18px;}
     .info-row .k{font-size:.62rem; margin-bottom:8px; padding-top:0; letter-spacing:.14em;}
     .info-row .v{font-size:.78rem; line-height:1.55;}
     .phone-links{display:flex; gap:7px 12px; flex-direction:column; align-items:flex-start;}
@@ -424,10 +428,13 @@
     <div class="reveal">
       <div class="sec-tag">Contact</div>
       <div class="sec-title" style="font-size:1.7rem;">Get In Touch</div>
-      <div class="info-row"><div class="k">Venue</div><div class="v">Jagran Public School, Lucknow</div></div>
+      <div class="info-box">
+      <div class="info-row"><div class="k">Venue</div><div class="v"><a href="https://www.google.com/maps/place/JAGRAN+PUBLIC+SCHOOL,+LUCKNOW/@26.8525937,81.0264358,17z/data=!3m1!4b1!4m6!3m5!1s0x399be2faa74348ff:0x15fc660fe432c23!8m2!3d26.8525889!4d81.0290107!16s%2Fm%2F011qf90w?entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">Jagran Public School, Lucknow</a></div></div>
       <div class="info-row"><div class="k">Email</div><div class="v"><a href="mailto:technofiato@gmail.com">technofiato@gmail.com</a></div></div>
-      <div class="info-row"><div class="k">Phone</div><div class="v phone-links"><a href="tel:+917398217802">+91 73982 17802</a><span class="sep">/</span><a href="tel:+919910314971">+91 99103 14971</a></div></div>
+      <div class="info-row"><div class="k">Mr. Vivek Singh Yadav (Teacher Coordinator)</div><div class="v"><a href="tel:+917398217802">+91 73982 17802</a></div></div>
+      <div class="info-row"><div class="k">Event Director</div><div class="v"><a href="tel:+919910314971">+91 99103 14971</a></div></div>
       <div class="info-row"><div class="k">Instagram</div><div class="v"><a href="https://www.instagram.com/jps_technofiato" target="_blank" rel="noopener">@jps_technofiato</a></div></div>
+      </div>
     </div>
     <div class="reveal">
       <div class="sec-tag">Core Team</div>
