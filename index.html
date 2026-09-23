@@ -209,6 +209,11 @@
     .info-row .v{font-size:.78rem; line-height:1.55;}
     .phone-links{display:flex; gap:7px 12px; flex-direction:column; align-items:flex-start;}
     .phone-links .sep{display:none;}
+    .tagline{display:block !important; width:auto !important; text-align:center; transform:none !important;}
+    .tagline span{margin-left:0 !important; margin-right:0 !important;}
+    .tagline span{display:block;}
+    .tagline span:first-child{margin-bottom:4px;}
+    .logo-standalone{width:100px !important; height:100px !important; top:15% !important;}
   }
 
   footer{padding:44px 0 30px; border-top:1px solid var(--line); position:relative; z-index:1; background:var(--bg);}
@@ -324,8 +329,8 @@
 
     <div class="stage-title" id="titleA">
       <div class="eyebrow">Jagran Public School Presents</div>
-      <h1>TECHNO <span class="hi">FIATO</span></h1>
-      <div class="tagline">Built to Compete, Programmed to Win</div>
+      <h1 id="heroTitle">TECHNO <span class="hi">FIATO</span></h1>
+      <div class="tagline" id="heroTagline" style="display:flex; justify-content:space-between; margin-left:auto; margin-right:auto; transform:translateX(18px);"><span>Built to Compete</span><span style="margin-right:20px;">Programmed to Win</span></div>
       <p class="sub">One day. Two arenas. Every circuit, every line of code, put to the test.</p>
       <div class="hero-ctas" style="flex-direction:column;">
         <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
@@ -401,7 +406,7 @@
         <p class="panel-desc">Where mechanical design meets strategy — six builds, six arenas, one shot to prove your machine outperforms the rest.</p>
         <div class="chip-grid">
           <div class="chip"><div class="chip-top"><span class="id">RB—01</span><span class="nm">Robo Rash</span></div><div class="chip-detail"><p>An adrenaline-charged obstacle course that pushes robots to their limits — bots navigate ramps, cones, and boundaries in a race against the clock where precision matters as much as speed.</p></div></div>
-          <div class="chip"><div class="chip-top"><span class="id">RB—02</span><span class="nm">Rocketeer</span></div><div class="chip-detail"><p>A test of engineering, precision, and performance — custom-built single-stage water rockets compete to achieve maximum flight distance.</p></div></div>
+          <div class="chip"><div class="chip-top"><span class="id">RB—02</span><span class="nm">Maneuver</span></div><div class="chip-detail"><p>A test of robotic skill, precision, and speed — custom-built bots navigate a challenging track while completing object-placement tasks and checkpoints for the highest score.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">RB—03</span><span class="nm">Robo Rumble</span></div><div class="chip-detail"><p>An action-packed balloon battle where strategy meets chaos — two bots enter the arena armed with balloons, and the goal is to protect your own while popping your opponent's.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">RB—04</span><span class="nm">Hover Surge</span></div><div class="chip-detail"><p>A clash of engineering skill and control — custom-built hovercrafts face off head-to-head, each testing stability and maneuverability while trying to push the opponent off the platform.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">RB—05</span><span class="nm">GOB</span></div><div class="chip-detail"><p>A clash of engineering skill and durability — custom-built machines battle it out in a test of strength, control, and resilience, staying in the arena until the last second.</p></div></div>
@@ -506,6 +511,17 @@
   syncHeaderOffset();
   window.addEventListener('resize', syncHeaderOffset);
   if(document.fonts && document.fonts.ready){ document.fonts.ready.then(syncHeaderOffset); }
+
+  function syncTaglineWidth(){
+    const title = document.getElementById('heroTitle');
+    const tagline = document.getElementById('heroTagline');
+    if(!title || !tagline) return;
+    if(window.innerWidth <= 640){ tagline.style.width = ''; return; }
+    tagline.style.width = title.offsetWidth + 'px';
+  }
+  syncTaglineWidth();
+  window.addEventListener('resize', syncTaglineWidth);
+  if(document.fonts && document.fonts.ready){ document.fonts.ready.then(syncTaglineWidth); }
 
   document.getElementById('brandLink').addEventListener('click', (e) => {
     e.preventDefault();
