@@ -123,6 +123,16 @@
   .btn-primary:hover{background:var(--crimson); color:var(--text); transform:translate(-2px,-2px);}
   .btn-ghost{border:1px solid var(--text-dim); color:var(--text);}
   .btn-ghost:hover{border-color:var(--acid); color:var(--acid); transform:translate(-2px,-2px);}
+  /* hero button group: three small buttons, Register Now stretched to the same width */
+  .cta-group{display:flex; flex-direction:column; gap:14px; width:max-content; max-width:100%; align-items:stretch;}
+  .cta-row{display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:10px;}
+  .cta-row .btn-sm{padding:14px 18px; font-size:.7rem; text-align:center; white-space:nowrap;}
+  .cta-register{text-align:center; padding-top:16px; padding-bottom:16px;}
+  @media (max-width:560px){ .cta-row{grid-auto-flow:row; grid-auto-columns:auto;} }
+  #bytegenesis-chip.open .chip-detail{max-height:420px;}
+  .chip-detail .topic-label{font-family:var(--f-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--crimson); margin-top:10px; font-weight:700;}
+  .chip-detail ol.topic-list{margin:6px 0 0 20px; padding:0; font-family:var(--f-body); font-size:.92rem; color:var(--text-dim); line-height:1.5;}
+  .chip:hover .chip-detail ol.topic-list, .chip:hover .chip-detail .topic-label{color:var(--bg);}
   .scrollcue{position:absolute; bottom:28px; left:50%; transform:translateX(-50%); z-index:5; font-family:var(--f-mono); font-size:.62rem; color:var(--text-faint); letter-spacing:.2em; display:flex; flex-direction:column; align-items:center; gap:8px;}
   .scrollcue .line{width:1px; height:28px; background:linear-gradient(var(--acid), transparent); animation:pulse 1.8s infinite;}
   @keyframes pulse{0%,100%{opacity:.2;} 50%{opacity:1;}}
@@ -333,11 +343,14 @@
       <div class="tagline" id="heroTagline" style="display:flex; justify-content:space-between; margin-left:auto; margin-right:auto; transform:translateX(18px);"><span>Built to Compete</span><span style="margin-right:20px;">Programmed to Win</span></div>
       <p class="sub">One day. Two arenas. Every circuit, every line of code, put to the test.</p>
       <div class="hero-ctas" style="flex-direction:column;">
-        <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap;">
-          <a href="#tech-events" class="btn btn-ghost">Explore Events</a>
-          <a href="TechnoFiato 2026.pdf" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">View Brochure</a>
+        <div class="cta-group">
+          <div class="cta-row">
+            <a href="#tech-events" class="btn btn-ghost btn-sm">Explore Events</a>
+            <a href="TechnoFiato 2026.pdf" class="btn btn-ghost btn-sm" target="_blank" rel="noopener noreferrer">View Brochure</a>
+            <a href="#tech-events" class="btn btn-ghost btn-sm" id="bytegenesisTopicBtn">Bytegenesis Topic</a>
+          </div>
+          <a href="https://tally.so/r/b51QWZ" target="_blank" rel="noopener" class="btn btn-primary cta-register">Register Now</a>
         </div>
-        <a href="https://tally.so/r/b51QWZ" target="_blank" rel="noopener" class="btn btn-primary">Register Now</a>
       </div>
     </div>
 
@@ -351,7 +364,7 @@
           <div class="chip"><div class="chip-top"><span class="id">TE—02</span><span class="nm">Morphotek</span></div><div class="chip-detail"><p>Participants will be given a UI/UX design theme or problem statement on the spot. They will have 1 hour to conceptualize, design, and present a functional interface based on the given theme.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">TE—03</span><span class="nm">Modelus Virtuo</span></div><div class="chip-detail"><p>Participants will receive a reference image and must recreate it in 3D using only the provided software. The challenge lies in precision, attention to detail, and effective use of 3D modeling tools.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">TE—04</span><span class="nm">Pixelis</span></div><div class="chip-detail"><p>Participants will be given a topic on the spot and must create a creative visual composition based on it using Adobe Photoshop, testing creativity, visual storytelling, and composition.</p></div></div>
-          <div class="chip"><div class="chip-top"><span class="id">TE—05</span><span class="nm">Bytegenesis</span></div><div class="chip-detail"><p>Participants will be given topics one week prior and must create an animated story on Scratch, communicating the chosen topic through storytelling, characters, dialogue, and movement.</p></div></div>
+          <div class="chip" id="bytegenesis-chip"><div class="chip-top"><span class="id">TE—05</span><span class="nm">Bytegenesis</span></div><div class="chip-detail"><p>Participants will choose one of the topics below and create an animated story on Scratch, communicating the chosen topic through storytelling, characters, dialogue, and movement.</p><p class="topic-label">Scratch Topics</p><ol class="topic-list"><li>My Pet Robot's First Day</li><li>The Knight Who Was Afraid of Dragons</li><li>Lost at Sea: The Fish Who Forgot His Way Home</li></ol></div></div>
           <div class="chip"><div class="chip-top"><span class="id">TE—06</span><span class="nm">Bytecoder</span></div><div class="chip-detail"><p>Participants will be given three programming problems to solve within the allotted time. The goal is efficient, well-structured code that produces the required output under pressure.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">TE—07</span><span class="nm">Arcbyte</span></div><div class="chip-detail"><p>A high-energy gaming showdown featuring Mortal Kombat and EA FC, where players battle head-to-head showcasing combat skills, strategy, reflexes, and competitive spirit.</p></div></div>
           <div class="chip"><div class="chip-top"><span class="id">TE—08</span><span class="nm">Tech Nova</span></div><div class="chip-detail"><p>Teams present a fully functional software or hardware-based solution to a real-world problem, reflecting the innovation, practicality, and reliability of a market-ready product.</p></div></div>
@@ -533,6 +546,40 @@
     entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in-view'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   revealEls.forEach(el => io.observe(el));
+
+  const bgBtn = document.getElementById('bytegenesisTopicBtn');
+  const bgChip = document.getElementById('bytegenesis-chip');
+  if(bgBtn && bgChip){
+    bgBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const stageEl = document.getElementById('stageA');
+      const panelInner = bgChip.closest('.panel-inner');
+
+      const revealChip = () => {
+        bgChip.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('open'));
+        bgChip.classList.add('open');
+        if(!panelInner) return;
+        requestAnimationFrame(() => {
+          const pr = panelInner.getBoundingClientRect();
+          const cr = bgChip.getBoundingClientRect();
+          panelInner.scrollTop += (cr.top - pr.top) - 20;
+        });
+      };
+
+      if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+        bgChip.scrollIntoView({ block: 'center' });
+        revealChip();
+        return;
+      }
+
+      // Jump straight to the point where the events panel is fully visible (no long animated
+      // scroll through the heavy hero effects, which caused lag), then open the dropdown.
+      const stageTop = stageEl.getBoundingClientRect().top + window.pageYOffset;
+      const targetY = stageTop + (stageEl.offsetHeight - window.innerHeight) * 0.86;
+      window.scrollTo({ top: targetY, behavior: 'instant' });
+      requestAnimationFrame(() => requestAnimationFrame(revealChip));
+    });
+  }
 
   document.querySelectorAll('.chip-grid').forEach(grid => {
     const chips = grid.querySelectorAll('.chip');
@@ -1321,7 +1368,8 @@
       • <strong>Format:</strong> Individual (Class 6-8) | Duration: 1 Hour<br>
       • <strong>Timing:</strong> 12:30 - 01:30 PM | Computer Lab 2 (1st Floor)<br>
       • <strong>Software:</strong> Scratch v3.0<br>
-      • <strong>Note:</strong> Topics are revealed 1 week prior to the event! Focus on storytelling, dialogue, and block logic.<br>
+      • <strong>Topics (choose one):</strong> 1) My Pet Robot's First Day, 2) The Knight Who Was Afraid of Dragons, 3) Lost at Sea: The Fish Who Forgot His Way Home<br>
+      • <strong>Note:</strong> Focus on storytelling, characters, dialogue, and block logic.<br>
       <div class="tf-contact-badge">👤 <strong>Event Coordinator:</strong> Anuvi Srivastava (<a href="tel:+919532343029">+91 95323 43029</a>)</div>`;
       tfAppend(reply, 'bot');
       return;
@@ -1439,4 +1487,3 @@
 </body>
 </html>
 <!-- refresh -->
-
